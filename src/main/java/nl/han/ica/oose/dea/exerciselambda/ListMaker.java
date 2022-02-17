@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ListMaker {
 
@@ -16,27 +18,26 @@ public class ListMaker {
      * @param allPersons A {@link List} of {@link Person} Objects
      * @return A {@link List} containing only the Persons that are both male and adult
      */
-    public List<Person> createMaleAdultList(List<Person> allPersons) {
+    private static int adultMinAge = 18;
+    private Predicate<Person> isAdult = (person) -> person.isAdult(adultMinAge);
+    private Predicate<Person> isMale = person -> person.isGender(Gender.MALE);
+    private Predicate<Person> isFemale = person -> person.isGender(Gender.FEMALE);
 
-        if (allPersons == null) {
+    public List<Person> createAdultList(List<Person> allPerson, Gender gender) {
+        if (allPerson == null) {
             return new ArrayList<>();
         }
 
-        List<Person> filteredMaleAdults = new ArrayList<>();
+        return allPerson.stream().filter(isAdult)
+                .filter(person -> person.isGender(gender))
+                .collect(Collectors.toList());
 
-        for (Person person : allPersons) {
-            if (person.getGender().equals(Gender.MALE)) {
-                LocalDate now = LocalDate.now();
-                Period age = Period.between(person.getBirthDate(), now);
 
-                if (age.getYears() >= 18) {
-                    filteredMaleAdults.add(person);
-                }
+    }
 
-            }
-        }
+    public List<Person> createMaleAdultList(List<Person> allPersons) {
 
-        return filteredMaleAdults;
+        return createAdultList(allPersons, Gender.MALE);
     }
 
     /**
@@ -47,25 +48,7 @@ public class ListMaker {
      */
     public List<Person> createFemaleAdultList(List<Person> allPersons) {
 
-        if (allPersons == null) {
-            return new ArrayList<>();
-        }
-
-        List<Person> filteredFemaleAdults = new ArrayList<>();
-
-        for (Person person : allPersons) {
-            if (person.getGender().equals(Gender.FEMALE)) {
-                LocalDate now = LocalDate.now();
-                Period age = Period.between(person.getBirthDate(), now);
-
-                if (age.getYears() >= 18) {
-                    filteredFemaleAdults.add(person);
-                }
-            }
-        }
-
-
-        return filteredFemaleAdults;
+        return createAdultList(allPersons, Gender.FEMALE);
     }
 
 }

@@ -1,6 +1,7 @@
 package nl.han.ica.oose.dea.exerciselambda.person;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 public class Person {
@@ -41,4 +42,15 @@ public class Person {
     public String getFirstName() {
         return firstName;
     }
+
+    public boolean isGender(Gender g) {
+        return gender.equals(g);
+    }
+
+    public boolean isAdult(int adultMinAge) {
+        LocalDate now = LocalDate.now();
+        Period age = Period.between(birthDate, now);
+        return age.getYears() >= adultMinAge;
+    }
+
 }
